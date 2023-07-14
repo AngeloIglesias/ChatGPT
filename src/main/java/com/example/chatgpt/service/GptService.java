@@ -47,10 +47,12 @@ public class GptService {
 
         Message message1 = new Message();
         message1.setContent(message);
+        message1.setRole("user");  //user or system?
 
         List<Message> messages = List.of(message1);
 
         ChatRequest request = new ChatRequest();
+        request.setModel("gpt-3.5-turbo");
         request.setMessages(messages);
 
         String requestJson;
@@ -59,6 +61,7 @@ public class GptService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Serialization failed", e);  //ToDo
         }
+        System.out.println( "---------------------- REQUEST --> " + requestJson);
 
         Mono<ChatResponse> response = webClient.post()
                 .uri(CHAT_PATH)

@@ -2,6 +2,7 @@ package com.example.chatgpt.view;
 
 import com.example.chatgpt.model.ChatResponse;
 import com.example.chatgpt.service.GptService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.messages.MessageList;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -55,6 +57,15 @@ public class ChatView extends VerticalLayout {
     private void handleResponse(ChatResponse response) {
         // parse the response to get the actual message
         messages.add(new MessageListItem(response.getChoices().get(0).getMessage().getContent(), LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
-        messageList.setItems(messages);
+
+        //add to ui
+        VaadinSession.getCurrent().lock();
+        try {
+            UI.getCurrent().access(() -> {
+                messageList.setItems(messages);
+            });
+        } finally {
+            VaadinSession.getCurrent().unlock();
+        }
     }
 }
