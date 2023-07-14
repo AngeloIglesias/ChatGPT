@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class ParameterStoreTest {
 
-    @Value("${openai}")
+//    @Value("${apikey}")
+    @Value("${apikey}")
     private String openAiValue;
 
     @Test

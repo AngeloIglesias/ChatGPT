@@ -1,0 +1,24 @@
+#spring.config.import: configserver:http://localhost:8888
+
+spring:
+  application:
+    name: openai
+  config:
+    import: "aws-parameterstore:/"
+cloud:
+  aws:
+    #    region:
+    #      static: eu-central-1
+    paramstore:
+#      prefix: /config
+#      defaultContext: application
+#      name: openai
+#      profileSeparator: _
+#      enabled: true
+      failFast: true
+
+
+#    stack:
+#      auto: false
+
+logging.level.com.amazonaws.request: DEBUG
