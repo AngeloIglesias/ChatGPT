@@ -1,4 +1,6 @@
-# OpenAi Vaadin Client
+# OpenAI Vaadin Client
+
+
 
 Um die Services von OpenAI verwenden zu können wird ein API Key benötigt. Dieser ist im AWS Systems Manager Parameter Store zu hinterlegen.
 
@@ -12,8 +14,9 @@ aws_access_key_id=AK000000000000000074
 aws_secret_access_key=XYZ
 ```
 
-
 ## ChatGPT
+
+API: https://platform.openai.com/docs/api-reference/chat
 
 Die Adresse lautet: http://localhost:8080/chat
 

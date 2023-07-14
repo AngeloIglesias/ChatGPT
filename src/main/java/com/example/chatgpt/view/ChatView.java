@@ -1,5 +1,6 @@
 package com.example.chatgpt.view;
 
+import com.example.chatgpt.model.ChatResponse;
 import com.example.chatgpt.service.GptService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Paragraph;
@@ -51,9 +52,9 @@ public class ChatView extends VerticalLayout {
                 .subscribe(response -> handleResponse(response));
     }
 
-    private void handleResponse(String response) {
+    private void handleResponse(ChatResponse response) {
         // parse the response to get the actual message
-        messages.add(new MessageListItem(response, LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
+        messages.add(new MessageListItem(response.getChoices().get(0).getMessage().getContent(), LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
         messageList.setItems(messages);
     }
 }
