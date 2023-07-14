@@ -3,9 +3,12 @@ package com.example.chatgpt.service;
 import com.example.chatgpt.model.ChatRequest;
 import com.example.chatgpt.model.ChatResponse;
 import com.example.chatgpt.model.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,10 +25,16 @@ public class GptService {
     @Value("${apikey}")
     private String apiKey;
 
+    private ObjectMapper objectMapper;
+
 //    private WebClient webClient = WebClient.create();
     WebClient webClient = WebClient.create(OPENAI_BASE_PATH);
 
-    public ChatResponse sendMessage(String message) {
+    public GptService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public Mono<ChatResponse> sendMessage(String message) {
         /*   return webClient.post()
                 .uri(GPT_API)
                 .header("Authorization", "Bearer " + apiKey)
@@ -44,17 +53,20 @@ public class GptService {
         ChatRequest request = new ChatRequest();
         request.setMessages(messages);
 
-        //ToDo
-// populate the request object
+        String requestJson;
+        try {
+            requestJson = objectMapper.writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Serialization failed", e);  //ToDo
+        }
 
-
-        ChatResponse response = webClient.post()
+        Mono<ChatResponse> response = webClient.post()
                 .uri(CHAT_PATH)
                 .header("Authorization", "Bearer " + apiKey)
-                .body(BodyInserters.fromValue(request))
+                .header("Content-Type", "application/json")
+                .body(BodyInserters.fromValue(requestJson))
                 .retrieve()
-                .bodyToMono(ChatResponse.class)
-                .block();
+                .bodyToMono(ChatResponse.class);
 
         return response;
     }
@@ -62,6 +74,8 @@ public class GptService {
 
     @PostConstruct
     private void postConstruct() {
+
+        //ToDo: Better remove this!
         System.out.println("------------------- API Key -> " + apiKey);
     }
 }

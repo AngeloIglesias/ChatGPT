@@ -49,7 +49,7 @@ public class ChatView extends VerticalLayout {
         messages.add(new MessageListItem(message, LocalDateTime.now().toInstant(zoneOffset), "You"));
         messageList.setItems(messages);
         gptService.sendMessage(message)
-                .subscribe(response -> handleResponse(response));
+                .subscribe(this::handleResponse);
     }
 
     private void handleResponse(ChatResponse response) {

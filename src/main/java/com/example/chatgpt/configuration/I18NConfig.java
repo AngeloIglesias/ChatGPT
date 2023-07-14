@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.ZoneOffset;
 
 @Configuration
-public class I18nConfig {
+public class I18NConfig {
     @Bean
     public ZoneOffset utcZoneOffset() {
         return ZoneOffset.ofHours(+2);
