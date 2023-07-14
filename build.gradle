@@ -32,30 +32,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'com.vaadin:vaadin-spring-boot-starter'
 
-//    implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.4.4'
-//    implementation 'io.awspring.cloud:spring-cloud-starter-aws-'
-
-//    // https://mvnrepository.com/artifact/software.amazon.awssdk/ssm
-//    implementation 'software.amazon.awssdk:ssm:2.20.102'
-
-//    implementation 'org.springframework.boot:spring-cloud-starter-aws-parameter-store-config'
-//    implementation 'io.awspring.cloud:spring-cloud-aws-parameter-store:3.0.1'
-
-//    implementation('org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.1')
-
-    /////////////////////////////////////////////////////////////////////////
-
-    //Works too? -->
     implementation 'io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.0.1'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.0.1'
-
-/*    implementation 'org.springframework.cloud:spring-cloud-starter:3.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config:2.2.6.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'*/
-
-
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

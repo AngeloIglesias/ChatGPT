@@ -11,14 +11,10 @@ import reactor.core.publisher.Mono;
 @Service
 public class GptService {
 
-//    @Value("${apikey}")
-
-//    @Value("${config.openai.apikey}")
-    @Value("${OpenAI}")
-    private String apiKey;
-
     private static final String GPT_API = "https://api.openai.com/v1/engines/davinci-codex/completions";
-//    private static final String API_KEY = "";
+
+    @Value("${apikey}")
+    private String apiKey;
 
     private WebClient webClient = WebClient.create();
 

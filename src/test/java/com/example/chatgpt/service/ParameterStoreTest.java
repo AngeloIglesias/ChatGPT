@@ -9,13 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class ParameterStoreTest {
 
-//    @Value("${apikey}")
     @Value("${apikey}")
     private String openAiValue;
 
     @Test
     public void testLoadParameterFromStore() {
         assertNotNull(openAiValue);
-        // Füge hier weitere Überprüfungen hinzu, basierend auf dem erwarteten Wert von "OpenAI"
     }
 }
