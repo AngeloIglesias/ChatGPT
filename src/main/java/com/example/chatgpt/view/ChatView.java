@@ -33,9 +33,6 @@ public class ChatView extends VerticalLayout {
     private final TextField textField = new TextField();
     private final List<MessageListItem> messages = new ArrayList<>();
 
-//    //create data provider
-//    ListDataProvider<MessageListItem> dataProvider = DataProvider.ofCollection(messages);
-
     private UI current;
 
     @Autowired
@@ -52,8 +49,6 @@ public class ChatView extends VerticalLayout {
         sendButton.setThemeName("primary");
         HorizontalLayout inputLayout = new HorizontalLayout(textField, sendButton);
         inputLayout.expand(textField);
-
-//        dataProvider.addDataProviderListener(event -> refreshUi());
 
         return inputLayout;
     }
