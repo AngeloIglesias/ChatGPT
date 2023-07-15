@@ -5,6 +5,7 @@ import com.example.chatgpt.model.Message;
 import com.example.chatgpt.service.GptService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Route(value = "chat")
 @UIScope
+@CssImport("./styles/styles.css")
 public class ChatView extends VerticalLayout {
 
     private final GptService gptService;
@@ -47,14 +49,11 @@ public class ChatView extends VerticalLayout {
     private HorizontalLayout createInputLayout() {
         Button sendButton = new Button("Send", event -> sendMessage());
         sendButton.setThemeName("primary");
+
         HorizontalLayout inputLayout = new HorizontalLayout(textField, sendButton);
         inputLayout.expand(textField);
 
         return inputLayout;
-    }
-
-    private void refreshUi() {
-        messageList.setItems(messages);
     }
 
     private void sendMessage() {
@@ -66,9 +65,9 @@ public class ChatView extends VerticalLayout {
                 .subscribe(this::handleResponse);
     }
 
-    private void handleResponse(ChatResponse response) {
+    private void handleResponse(String response) {
         // parse the response to get the actual message
-        messages.add(new MessageListItem(response.getChoices().get(0).getMessage().getContent(), LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
+        messages.add(new MessageListItem(response, LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
 
         //add to ui
         current.access(() -> {
