@@ -1,11 +1,28 @@
 /* styles.css */
 
-.message-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: auto;
+/* Global style values */
+/*html {*/
+/*    --lumo-primary-color: green;*/
+/*    --lumo-font-family: "Roboto";*/
+/*}*/
+
+/* Scoped to a type of component */
+vaadin-button {
+    --lumo-font-family: "Roboto";
 }
+
+.chat-message-list {
+    /* Stil für die gesamte Nachrichtenliste */
+    background-color: limegreen;
+    color: white;
+}
+
+/*.message-list {*/
+/*    list-style-type: circle;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    overflow: auto;*/
+/*}*/
 
 .message-list-item {
     margin: 10px;
@@ -13,12 +30,12 @@
     border-radius: 10px;
 }
 
-.message-list-item.user {
+.user {
     background-color: #DCF8C6;
     align-self: flex-end;
 }
 
-.message-list-item.bot {
+.bot {
     background-color: #FFFFFF;
     align-self: flex-start;
 }

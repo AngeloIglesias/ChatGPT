@@ -37,6 +37,9 @@ public class ChatView extends VerticalLayout {
     public ChatView(GptService gptService) {
         current = UI.getCurrent();
         this.gptService = gptService;
+
+        messageList.addClassName("chat-message-list");
+
         add(messageList, createInputLayout());
     }
 
@@ -53,7 +56,10 @@ public class ChatView extends VerticalLayout {
     private void sendMessage() {
         String message = textField.getValue();
         textField.clear();
-        messages.add(new MessageListItem(message, LocalDateTime.now().toInstant(zoneOffset), "You"));
+        MessageListItem userMessage = new MessageListItem(message, LocalDateTime.now().toInstant(zoneOffset), "You");
+        userMessage.addThemeNames("current-user");
+        userMessage.addThemeNames("user");
+        messages.add(userMessage);
         messageList.setItems(messages);
         gptService.sendMessage(message)
                 .subscribe(this::handleResponse);
@@ -61,7 +67,10 @@ public class ChatView extends VerticalLayout {
 
     private void handleResponse(String response) {
         // parse the response to get the actual message
-        messages.add(new MessageListItem(response, LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
+        MessageListItem botMessage = new MessageListItem(response, LocalDateTime.now().toInstant(zoneOffset), "Bot");
+        botMessage.addThemeNames("bot");
+        botMessage.addThemeNames("current-bot");
+        messages.add(botMessage);
 
         //add to ui
         current.access(() -> {
