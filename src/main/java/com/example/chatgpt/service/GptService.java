@@ -35,15 +35,6 @@ public class GptService {
     }
 
     public Mono<ChatResponse> sendMessage(String message) {
-        /*   return webClient.post()
-                .uri(GPT_API)
-                .header("Authorization", "Bearer " + apiKey)
-                .header("Content-Type", "application/json")
-                .body(BodyInserters.fromValue("{\"prompt\":\""+message+"\",\"max_tokens\":60}"))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(String.class);
-    }*/
 
         Message message1 = new Message();
         message1.setContent(message);

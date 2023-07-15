@@ -75,11 +75,9 @@ public class ChatView extends VerticalLayout {
         // parse the response to get the actual message
         messages.add(new MessageListItem(response.getChoices().get(0).getMessage().getContent(), LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
 
-
         //add to ui
-        List<MessageListItem> newList = new ArrayList<>(messages);
         current.access(() -> {
-            messageList.setItems(newList);
+            messageList.setItems(messages);
             current.push();
         });
     }
