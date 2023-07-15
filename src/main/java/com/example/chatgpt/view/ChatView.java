@@ -1,22 +1,15 @@
 package com.example.chatgpt.view;
 
-import com.example.chatgpt.model.ChatResponse;
-import com.example.chatgpt.model.Message;
 import com.example.chatgpt.service.GptService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +18,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(value = "chat")
+//@Route(value = "chat")
+@Route(value = "")
 @UIScope
 @CssImport("./styles/styles.css")
 public class ChatView extends VerticalLayout {
