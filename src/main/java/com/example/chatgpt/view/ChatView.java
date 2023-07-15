@@ -1,6 +1,7 @@
 package com.example.chatgpt.view;
 
 import com.example.chatgpt.model.ChatResponse;
+import com.example.chatgpt.model.Message;
 import com.example.chatgpt.service.GptService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -9,9 +10,12 @@ import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,10 +33,16 @@ public class ChatView extends VerticalLayout {
     private final TextField textField = new TextField();
     private final List<MessageListItem> messages = new ArrayList<>();
 
+//    //create data provider
+//    ListDataProvider<MessageListItem> dataProvider = DataProvider.ofCollection(messages);
+
+    private UI current;
+
     @Autowired
     private ZoneOffset zoneOffset;
 
     public ChatView(GptService gptService) {
+        current = UI.getCurrent();
         this.gptService = gptService;
         add(messageList, createInputLayout());
     }
@@ -42,7 +52,14 @@ public class ChatView extends VerticalLayout {
         sendButton.setThemeName("primary");
         HorizontalLayout inputLayout = new HorizontalLayout(textField, sendButton);
         inputLayout.expand(textField);
+
+//        dataProvider.addDataProviderListener(event -> refreshUi());
+
         return inputLayout;
+    }
+
+    private void refreshUi() {
+        messageList.setItems(messages);
     }
 
     private void sendMessage() {
@@ -58,14 +75,12 @@ public class ChatView extends VerticalLayout {
         // parse the response to get the actual message
         messages.add(new MessageListItem(response.getChoices().get(0).getMessage().getContent(), LocalDateTime.now().toInstant(ZoneOffset.UTC), "Bot"));
 
+
         //add to ui
-        VaadinSession.getCurrent().lock();
-        try {
-            UI.getCurrent().access(() -> {
-                messageList.setItems(messages);
-            });
-        } finally {
-            VaadinSession.getCurrent().unlock();
-        }
+        List<MessageListItem> newList = new ArrayList<>(messages);
+        current.access(() -> {
+            messageList.setItems(newList);
+            current.push();
+        });
     }
 }

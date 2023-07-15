@@ -12,6 +12,10 @@ java {
     sourceCompatibility = '17'
 }
 
+repositories {
+    mavenCentral()
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -35,6 +39,9 @@ dependencies {
     implementation 'io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.0.1'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.0.1'
+
+//    implementation 'org.atmosphere:atmosphere-runtime:3.0.3'
+
     testImplementation 'org.projectlombok:lombok:1.18.26'
 
     compileOnly 'org.projectlombok:lombok'
