@@ -6,6 +6,7 @@ package com.example.chatgpt.view;
 //import com.vaadin.collaborationengine.CollaborationMessageList;
 //import com.vaadin.collaborationengine.MessageManager;
 //import com.vaadin.collaborationengine.UserInfo;
+import com.sun.jna.platform.win32.Netapi32Util;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,6 +17,8 @@ import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
+
+import java.util.UUID;
 
 @PageTitle("Chat")
 @Route(value = "chatImprovements")
@@ -75,8 +78,8 @@ public class ChatViewVaadinImprovementsTest extends HorizontalLayout {
 
     public ChatViewVaadinImprovementsTest() {
 
-        //ToDo: Replaces Collaboration Kit (Engine)
-
+//        //ToDo: Replaces Collaboration Kit (Engine)
+//
 //        addClassNames("chat-view", Width.FULL, Display.FLEX, Flex.AUTO);
 //        setSpacing(false);
 //
@@ -86,7 +89,7 @@ public class ChatViewVaadinImprovementsTest extends HorizontalLayout {
 //        // identifier, and the user's real name. You can also provide the users
 //        // avatar by passing an url to the image as a third parameter, or by
 //        // configuring an `ImageProvider` to `avatarGroup`.
-//        UserInfo userInfo = new UserInfo(UUID.randomUUID().toString(), "Steve Lange");
+//        Netapi32Util.UserInfo userInfo = new Netapi32Util.UserInfo(UUID.randomUUID().toString(), "Steve Lange");
 //
 //        tabs = new Tabs();
 //        for (ChatInfo chat : chats) {
@@ -103,6 +106,9 @@ public class ChatViewVaadinImprovementsTest extends HorizontalLayout {
 //        }
 //        tabs.setOrientation(Orientation.VERTICAL);
 //        tabs.addClassNames(Flex.GROW, Flex.SHRINK, Overflow.HIDDEN);
+//
+//
+//
 //
 //        // CollaborationMessageList displays messages that are in a
 //        // Collaboration Engine topic. You should give in the user details of
@@ -144,13 +150,13 @@ public class ChatViewVaadinImprovementsTest extends HorizontalLayout {
 //        add(chatContainer, side);
 //        setSizeFull();
 //        expand(list);
-//
-//        // Change the topic id of the chat when a new tab is selected
-//        tabs.addSelectedChangeListener(event -> {
-//            currentChat = ((ChatTab) event.getSelectedTab()).getChatInfo();
-//            currentChat.resetUnread();
+
+        // Change the topic id of the chat when a new tab is selected
+        tabs.addSelectedChangeListener(event -> {
+            currentChat = ((ChatTab) event.getSelectedTab()).getChatInfo();
+            currentChat.resetUnread();
 //            list.setTopic(currentChat.getCollaborationTopic());
-//        });
+        });
     }
 
     private ChatTab createTab(ChatInfo chat) {

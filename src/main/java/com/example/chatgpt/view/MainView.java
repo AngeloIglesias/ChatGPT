@@ -7,6 +7,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -16,12 +17,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
 import java.util.Optional;
 
 //@CssImport(value = "./themes/chatgpt/styles.css")
 //@JsModule("./styles/shared-styles.js")
+@Route(value = "")
 public class MainView extends AppLayout {
 
     H2 viewTitle = new H2(""); //Not used here
@@ -31,7 +34,7 @@ public class MainView extends AppLayout {
 
     private final Tabs menu = createMenu();
 
-    private final Component subMenu = createSubMenu();
+    private final HorizontalLayout subMenu = createSubMenu();
 
     //Secondary menu:
     private final Component viewHeader = createHeaderContent();
@@ -94,11 +97,23 @@ public class MainView extends AppLayout {
                  createTab(VaadinIcon.WRENCH, "Settings", SettingsView.class));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.setSelectedIndex(1);
+
+        tabs.setSelectedIndex(0); //Select first tab
+
         return tabs;
     }
 
-    protected Component createSubMenu() {
+    public void setSelectedTab(int index) {
+        menu.setSelectedIndex(index);
+    }
+
+    protected static HorizontalLayout createSubMenu() {
         return new HorizontalLayout();
+    }
+
+    protected void setSubMenu(Component subMenu) {
+        this.subMenu.removeAll();
+        this.subMenu.add(subMenu);
     }
 
     private static Tab createTab(VaadinIcon viewIcon, String viewName, Class<? extends Component> view) {
