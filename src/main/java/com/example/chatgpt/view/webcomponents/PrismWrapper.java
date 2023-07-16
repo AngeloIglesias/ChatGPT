@@ -5,10 +5,12 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 
 @Tag("prism-wrapper")
-@JsModule("./themes/chatgpt/components/prism-wrapper.js")
+//@JsModule("./themes/chatgpt/components/prism-wrapper.js")
 public class PrismWrapper extends Component {
 
     public PrismWrapper() {
+
+        //ToDo
     }
 
     public void setCode(String code) {

@@ -20,9 +20,7 @@ import com.vaadin.flow.router.RouterLink;
 
 import java.util.Optional;
 
-//@PWA(name = "Ebook Scraper", shortName = "Scraper")
-//@Theme(value = Lumo.class, variant = Lumo.DARK)
-@CssImport(value = "./themes/chatgpt/styles.css")
+//@CssImport(value = "./themes/chatgpt/styles.css")
 //@JsModule("./styles/shared-styles.js")
 public class MainView extends AppLayout {
 
