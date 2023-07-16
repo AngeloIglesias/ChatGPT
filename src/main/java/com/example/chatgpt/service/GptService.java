@@ -29,6 +29,9 @@ public class GptService {
     @Value("${apikey}")
     private String apiKey;
 
+    @Value("${model}")
+    private String model;
+
     private ObjectMapper objectMapper;
     private final List<Message> messages = new ArrayList<>(); // Speichert den gesamten Chatverlauf
 
@@ -47,8 +50,9 @@ public class GptService {
         messages.add(userMessage); // Fügt die neue Benutzernachricht zur Liste hinzu
 
         ChatRequest request = new ChatRequest();
-        request.setModel("gpt-3.5-turbo");
+        request.setModel(model);
         request.setMessages(messages);
+
 
         String requestJson;
         try {
