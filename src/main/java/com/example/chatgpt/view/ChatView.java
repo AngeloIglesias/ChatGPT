@@ -1,32 +1,46 @@
 package com.example.chatgpt.view;
 
 import com.example.chatgpt.service.GptService;
+import com.example.chatgpt.view.webcomponents.PrismWrapper;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 //@Route(value = "chat")
-@Route(value = "")
+@PageTitle("ChatGPT")
+@RouteAlias(value = "", layout = MainView.class)
+@Route(value = "chat", layout = MainView.class)
 @UIScope
-@CssImport("./styles/styles.css")
+@CssImport("./themes/chatgpt/styles.css")
+@JsModule("./themes/chatgpt/components/prism-wrapper.js")
 public class ChatView extends VerticalLayout {
 
     private final GptService gptService;
     private final MessageList messageList = new MessageList();
-    private final TextField textField = new TextField();
+    private final TextArea textField = new TextArea();
     private final List<MessageListItem> messages = new ArrayList<>();
 
     private UI current;
@@ -34,21 +48,41 @@ public class ChatView extends VerticalLayout {
     @Autowired
     private ZoneOffset zoneOffset;
 
+
     public ChatView(GptService gptService) {
+//        getThemeList().set("dark", true);
         current = UI.getCurrent();
         this.gptService = gptService;
 
         messageList.addClassName("chat-message-list");
 
         add(messageList, createInputLayout());
+
+
+        /////////////////////////////////////
+        PrismWrapper prismWrapper = new PrismWrapper();
+        prismWrapper.setCode("public static void main(String[] args) { ... }");
+        prismWrapper.setLanguage("java");
+        add(prismWrapper);
+        /////////////////////////////////////
     }
 
     private HorizontalLayout createInputLayout() {
-        Button sendButton = new Button("Send", event -> sendMessage());
+        HorizontalLayout inputLayout = new HorizontalLayout();
+        inputLayout.getThemeList().set("dark", true);
+
+        Button sendButton = new Button("➢", event -> sendMessage()); //alternative: ⊳ or ⩥
+        sendButton.setWidth("100px");
+        sendButton.setClassName("send");
         sendButton.setThemeName("primary");
 
-        HorizontalLayout inputLayout = new HorizontalLayout(textField, sendButton);
-        inputLayout.expand(textField);
+        textField.setClassName("message");
+
+        inputLayout = new HorizontalLayout(textField, sendButton);
+//        inputLayout.expand(textField);
+        inputLayout.add(textField, sendButton);
+        inputLayout.setFlexGrow(1, textField); //Set Component which scales to window size
+        inputLayout.setWidthFull();
 
         return inputLayout;
     }
@@ -57,8 +91,7 @@ public class ChatView extends VerticalLayout {
         String message = textField.getValue();
         textField.clear();
         MessageListItem userMessage = new MessageListItem(message, LocalDateTime.now().toInstant(zoneOffset), "You");
-        userMessage.addThemeNames("current-user");
-        userMessage.addThemeNames("user");
+        userMessage.addThemeNames("user-message");
         messages.add(userMessage);
         messageList.setItems(messages);
         gptService.sendMessage(message)
@@ -68,8 +101,7 @@ public class ChatView extends VerticalLayout {
     private void handleResponse(String response) {
         // parse the response to get the actual message
         MessageListItem botMessage = new MessageListItem(response, LocalDateTime.now().toInstant(zoneOffset), "Bot");
-        botMessage.addThemeNames("bot");
-        botMessage.addThemeNames("current-bot");
+        botMessage.addThemeNames("bot-message");
         messages.add(botMessage);
 
         //add to ui
@@ -77,5 +109,13 @@ public class ChatView extends VerticalLayout {
             messageList.setItems(messages);
             current.push();
         });
+    }
+
+    private String extractCodeBlock(String codeBlock)
+    {
+        String language = "Java"; //ToDo
+        int start = codeBlock.indexOf("```" + language) + 3;
+        int end = codeBlock.indexOf("```", start);
+        return codeBlock.substring(start, end).trim();
     }
 }

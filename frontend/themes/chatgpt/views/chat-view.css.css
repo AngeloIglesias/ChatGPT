@@ -1,0 +1,79 @@
+/* styles.css */
+
+/*Global style values */
+html {
+    /*--lumo-primary-color: green;*/
+    /*--lumo-error-color: purple;*/
+    /*--lumo-success-color: yellow;*/
+    /*--lumo-font-family: "Roboto";*!*/
+
+
+}
+
+/*vaadin-button::part(label) {*/
+/*    color: red;*/
+/*    font-size: 20px;*/
+/*}*/
+
+vaadin-button.send {
+    background-color: dodgerblue;
+    color: yellowgreen;
+    font-size: 60px;
+    /*line-height: 0px;*/
+}
+
+vaadin-text-area.message {
+    background-color: dodgerblue;
+    color: yellowgreen;
+    font-size: 20px;
+}
+
+.chat-message-list {
+    /* Stil für die gesamte Nachrichtenliste */
+    /*background-color: limegreen;*/
+    /*color: white;*/
+}
+
+/*.message-list {*/
+/*    list-style-type: circle;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    overflow: auto;*/
+/*}*/
+
+/*.message-list-item {*/
+/*    margin: 10px;*/
+/*    padding: 10px;*/
+/*    border-radius: 10px;*/
+/*}*/
+
+.bot-message {
+    /* Roter Hintergrund für Bot-Nachrichten */
+
+    --lumo-primary-color: green;
+    /*background-color: #f00;*/
+    /*color: white;*/
+}
+
+.user-message {
+    /* Schwarzer Hintergrund für Benutzer-Nachrichten */
+    /*background-color: #000;*/
+    /*color: white;*/
+}
+
+/*.image-container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: flex-end;*/
+/*    align-items: flex-end;*/
+/*}*/
+
+/*.ebook-image-text {*/
+/*    position: absolute;*/
+/*    left: 0;*/
+/*    top: 0;*/
+/*}*/
+
+/*.image-row-layout {*/
+/*    flex-wrap: wrap;*/
+/*}*/
