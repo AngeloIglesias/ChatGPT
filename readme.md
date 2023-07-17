@@ -1,14 +1,14 @@
 # OpenAI Vaadin Client *REQUIRES API KEY
 
-Um die Services von OpenAI verwenden zu können wird ein API Key benötigt.
+To use the services of OpenAI, an API key is required.
 
-Dieser muss entweder in der application.yml unter dem Wert apikey abgelegt werden oder
+This key must be stored either in the application.yml under the value apikey or
 
-er wird im AWS Systems Manager Parameter Store von Amazon hinterlegt.
+it is stored in the AWS Systems Manager Parameter Store by Amazon.
 
 ## Set Up AWS
 
-Erstelle in Deinem OS-Benutzer-Verzeichnis unter /.aws/credentials einen Eintrag für deinen perssönlichen Parameter Store, z.B. so:
+Create an entry for your personal Parameter Store in your OS user directory under /.aws/credentials, for example:
 
 ```
 [test]
@@ -16,18 +16,18 @@ aws_access_key_id=AK000000000000000074
 aws_secret_access_key=XYZ
 ```
 
-Da es sich hierbei nicht um das [default] Profil handelt müssen bei Start die noch die Umgebungsvariablen entsprechend gesetzt werden:
+Since this is not the [default] profile, the environmental variables need to be set at startup:
 
 ![img.png](img.png)
 AWS_PROFILE=test;AWS_REGION=eu-central-1
 
-Wichtig ist die Region nicht zu vergessen, da es andernfalls nicht funktioniert. Nach dem Start kann über das Terminal geprüft werden, ob der Key stimmt, siehe:
+It is important not to forget the region, as otherwise it will not work. After startup, the terminal can be used to check if the key is correct, see:
 
-```------------------- API Key -> XXX``` (sollte in Produktion deaktiviert werden)
+```------------------- API Key -> XXX``` (should be deactivated in production)
 
 ## ChatGPT
 
 API: https://platform.openai.com/docs/api-reference/chat
 
-Die Adresse lautet: http://localhost:8080/chat
+The address is: http://localhost:8080/chat
 
