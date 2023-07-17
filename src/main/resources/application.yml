@@ -1,4 +1,4 @@
-apikey:
+apikey: <VISIT https://platform.openai.com/account/api-keys>
 
 server:
   port: 8080

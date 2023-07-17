@@ -19,6 +19,7 @@ aws_secret_access_key=XYZ
 Da es sich hierbei nicht um das [default] Profil handelt müssen bei Start die noch die Umgebungsvariablen entsprechend gesetzt werden:
 
 ![img.png](img.png)
+AWS_PROFILE=test;AWS_REGION=eu-central-1
 
 Wichtig ist die Region nicht zu vergessen, da es andernfalls nicht funktioniert. Nach dem Start kann über das Terminal geprüft werden, ob der Key stimmt, siehe:
 
