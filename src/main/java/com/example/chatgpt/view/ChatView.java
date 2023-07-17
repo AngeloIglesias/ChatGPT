@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Aside;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.messages.MessageInputI18n;
@@ -34,14 +35,13 @@ import java.util.UUID;
 
 //@Route(value = "chat")
 @PageTitle("ChatGPT")
-//@RouteAlias(value = "", layout = MainView.class)
+@RouteAlias(value = "", layout = MainView.class)
 @Route(value = "chat", layout = MainView.class)
 @UIScope
 //@CssImport("./themes/chatgpt/styles.css")
 public class ChatView extends VerticalLayout implements AfterNavigationObserver {
 
-    private ChatInfo[] chats = new ChatInfo[]{new ChatInfo("first", 0), new ChatInfo("second", 0),
-            new ChatInfo("third", 0)};
+    private ChatInfo[] chats = new ChatInfo[]{new ChatInfo("1", 0)};
     private ChatInfo currentChat = chats[0];
     private Tabs tabs;
 
@@ -139,6 +139,8 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
 
             tabs.add(createTab(chat));
         }
+        tabs.add(createAddTab()); //ToDo
+
         tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         tabs.addClassNames(LumoUtility.Flex.GROW, LumoUtility.Flex.SHRINK, LumoUtility.Overflow.HIDDEN);
 
@@ -218,6 +220,31 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
         chat.setUnreadBadge(badge);
         badge.getElement().getThemeList().add("badge small contrast");
         tab.add(new Span("#" + chat.name), badge);
+
+        return tab;
+    }
+
+    private Tab createAddTab() {
+        VaadinIcon viewIcon = VaadinIcon.PLUS;
+        Icon icon = viewIcon.create();
+
+        //Desktop:
+        icon.getStyle().set("box-sizing", "border-box")
+                .set("margin-inline-end", "var(--lumo-space-m)")
+                .set("margin-inline-start", "var(--lumo-space-xs)")
+                .set("padding", "var(--lumo-space-xs)");
+
+        RouterLink link = new RouterLink();
+        link.add(icon);
+        link.setRoute(ChatView.class);
+        link.setTabIndex(-1);
+
+        Tab tab = new Tab(link);
+
+        tab.addClassNames(LumoUtility.JustifyContent.BETWEEN);
+
+        Span badge = new Span();
+        badge.getElement().getThemeList().add("badge small contrast");
 
         return tab;
     }

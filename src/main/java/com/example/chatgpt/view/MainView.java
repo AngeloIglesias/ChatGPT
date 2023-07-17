@@ -7,7 +7,6 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -24,7 +23,6 @@ import java.util.Optional;
 
 //@CssImport(value = "./themes/chatgpt/styles.css")
 //@JsModule("./styles/shared-styles.js")
-@Route(value = "")
 public class MainView extends AppLayout {
 
     H2 viewTitle = new H2(""); //Not used here
