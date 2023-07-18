@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.Netapi32Util;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.avatar.AvatarGroup;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Aside;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Header;
@@ -41,16 +42,13 @@ import java.util.UUID;
 //@CssImport("./themes/chatgpt/styles.css")
 public class ChatView extends VerticalLayout implements AfterNavigationObserver {
 
-    private ChatInfo[] chats = new ChatInfo[]{new ChatInfo("1", 0)};
-    private ChatInfo currentChat = chats[0];
+    private List<ChatInfo> chats = new ArrayList<>();
+    private volatile int currentChatNumber;
     private Tabs tabs;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final GptService gptService;
-    private final MessageList messageList = new MessageList();
-    private final MessageInput messageInput = new MessageInput();
-    private final List<MessageListItem> messages = new ArrayList<>();
 
     private UI current;
 
@@ -84,53 +82,24 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
     public ChatView(GptService gptService) {
         current = UI.getCurrent();
         this.gptService = gptService;
+        
+        chats.add(new ChatInfo("1", 0));
+        currentChatNumber = 0;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         addClassNames("chat-view", LumoUtility.Width.FULL, LumoUtility.Display.FLEX, LumoUtility.Flex.AUTO);
         setSpacing(false);
 
-        // extra layouting
-        /*
-        VerticalLayout chatContainer = new VerticalLayout();
-        chatContainer.addClassNames(LumoUtility.Flex.AUTO, LumoUtility.Overflow.HIDDEN);
-
-        Aside side = new Aside();
-        side.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.COLUMN, LumoUtility.Flex.GROW_NONE, LumoUtility.Flex.SHRINK_NONE, LumoUtility.Background.CONTRAST_5);
-        side.setWidth("18rem");
-
-        Header header = new Header();
-        header.addClassNames(LumoUtility.Display.FLEX, LumoUtility.FlexDirection.ROW, LumoUtility.Width.FULL, LumoUtility.AlignItems.CENTER, LumoUtility.Padding.MEDIUM,
-                LumoUtility.BoxSizing.BORDER);
-        H3 channels = new H3("Channels");
-        channels.addClassNames(LumoUtility.Flex.GROW, LumoUtility.Margin.NONE);
-
-        AvatarGroup avatarGroup = new AvatarGroup();
-        avatarGroup.setMaxItemsVisible(4);
-        avatarGroup.addClassNames(LumoUtility.Width.AUTO);
-
-        header.add(channels, avatarGroup);
-
-        side.add(header, tabs);
-
-        chatContainer.add(messageList, createInputLayout());
-        add(side, chatContainer);*/
-
-        add(messageList, createInputLayout());
+        add(chats.get(currentChatNumber).messageList, createInputLayout());
 
         setSizeFull();
-        expand(messageList);
+        expand(chats.get(currentChatNumber).messageList);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        messageList.addClassName("chat-message-list");
+        chats.get(currentChatNumber).messageList.addClassName("chat-message-list");
 
-//        current = UI.getCurrent();
-//        this.gptService = gptService;
-//
-//
-//
-//        add(messageList, createInputLayout());
     }
 
     private Component createSubMenu() {
@@ -139,18 +108,17 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
 
             tabs.add(createTab(chat));
         }
-        tabs.add(createAddTab()); //ToDo
 
         tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         tabs.addClassNames(LumoUtility.Flex.GROW, LumoUtility.Flex.SHRINK, LumoUtility.Overflow.HIDDEN);
 
         // When a new tab is selected..
         tabs.addSelectedChangeListener(event -> {
-            currentChat = ((ChatTab) event.getSelectedTab()).getChatInfo();
-            currentChat.resetUnread();
+            currentChatNumber = Integer.parseInt(((ChatTab) event.getSelectedTab()).getChatInfo().name)-1;  //ToDo: Make things more solid
+            chats.get(currentChatNumber).resetUnread();
         });
 
-        return tabs;
+        return new HorizontalLayout(tabs, createAddTab());
     }
 
     private HorizontalLayout createInputLayout() {
@@ -161,14 +129,14 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
         messageInputI18n.setMessage("Send a message");
         messageInputI18n.setSend("➢");
 
-        messageInput.setI18n(messageInputI18n);
-        messageInput.setClassName("message");
+        chats.get(currentChatNumber).messageInput.setI18n(messageInputI18n);
+        chats.get(currentChatNumber).messageInput.setClassName("message");
 
-        messageInput.addSubmitListener(this::sendMessage);
+        chats.get(currentChatNumber).messageInput.addSubmitListener(this::sendMessage);
 
         inputLayout = new HorizontalLayout();
-        inputLayout.add(messageInput);
-        inputLayout.setFlexGrow(1, messageInput); //Set Component which scales to window size
+        inputLayout.add(chats.get(currentChatNumber).messageInput);
+        inputLayout.setFlexGrow(1, chats.get(currentChatNumber).messageInput); //Set Component which scales to window size
         inputLayout.setWidthFull();
 
         return inputLayout;
@@ -181,23 +149,23 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
         userMessage.addThemeNames("user-message");
         userMessage.setUserColorIndex(5);
 
-        messages.add(userMessage);
-        messageList.setItems(messages);
+        chats.get(currentChatNumber).messages.add(userMessage);
+        chats.get(currentChatNumber).messageList.setItems(chats.get(currentChatNumber).messages);
         gptService.sendMessage(message)
-                .subscribe(this::handleResponse);
+                .subscribe(response -> handleResponse(response, currentChatNumber));
     }
 
-    private void handleResponse(String response) {
+    private void handleResponse(String response, int currentChatNumber) {
         // parse the response to get the actual message
         MessageListItem botMessage = new MessageListItem(response, LocalDateTime.now().toInstant(zoneOffset), "Bot");
         botMessage.addThemeNames("bot-message");
         botMessage.setUserColorIndex(6);
 
-        messages.add(botMessage);
+        chats.get(currentChatNumber).messages.add(botMessage);
 
         //add to ui
         current.access(() -> {
-            messageList.setItems(messages);
+            chats.get(currentChatNumber).messageList.setItems(chats.get(currentChatNumber).messages);
             current.push();
         });
     }
@@ -224,29 +192,21 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
         return tab;
     }
 
-    private Tab createAddTab() {
+    private Component createAddTab() {
+        Button btn = new Button();
+
         VaadinIcon viewIcon = VaadinIcon.PLUS;
         Icon icon = viewIcon.create();
+        btn.setIcon(icon);
 
-        //Desktop:
-        icon.getStyle().set("box-sizing", "border-box")
-                .set("margin-inline-end", "var(--lumo-space-m)")
-                .set("margin-inline-start", "var(--lumo-space-xs)")
-                .set("padding", "var(--lumo-space-xs)");
+        //create new tab handler
+        btn.addClickListener(event -> {
+            ChatInfo chat = new ChatInfo(Integer.toString(chats.size()+1), 0);
+            chats.add(chat);
+            tabs.add(createTab(chat));
+        });
 
-        RouterLink link = new RouterLink();
-        link.add(icon);
-        link.setRoute(ChatView.class);
-        link.setTabIndex(-1);
-
-        Tab tab = new Tab(link);
-
-        tab.addClassNames(LumoUtility.JustifyContent.BETWEEN);
-
-        Span badge = new Span();
-        badge.getElement().getThemeList().add("badge small contrast");
-
-        return tab;
+        return btn;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,6 +227,12 @@ public class ChatView extends VerticalLayout implements AfterNavigationObserver 
         private String name;
         private int unread;
         private Span unreadBadge;
+
+        ///
+        private final MessageList messageList = new MessageList();
+        private final MessageInput messageInput = new MessageInput();
+        private final List<MessageListItem> messages = new ArrayList<>();
+        ///
 
         private ChatInfo(String name, int unread) {
             this.name = name;
